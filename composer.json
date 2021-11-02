@@ -1,9 +1,14 @@
 {
     "name": "blackpanda/virtualizor",
-    "description": "virtualizor wrapper",
+    "description": "Virtualizor API wrapper",
     "type": "library",
+    "require": {
+        "php": "^7.3|^8.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "illuminate/support": "^v8.69.0"
+    },
     "license": "MIT",
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "Blackpanda\\Virtualizor\\": "src/"
@@ -15,9 +20,5 @@
             "email": "46260610+B14ckP4nd4@users.noreply.github.com"
         }
     ],
-    "require": {
-        "php": "^7.3|^8.0",
-        "ext-curl": "*",
-        "ext-json": "*"
-    }
+    "minimum-stability": "dev"
 }
