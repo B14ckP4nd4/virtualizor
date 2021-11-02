@@ -10,7 +10,17 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Blackpanda\\Virtualizor\\": "src/"
+            "BlackPanda\\Virtualizor\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "BlackPanda\\Virtualizor\\VirtualizorServiceProvider"
+            ],
+            "aliases": {
+                "Virtualizor": "BlackPanda\\Virtualizor\\VirtualizorFacade"
+            }
         }
     },
     "authors": [
