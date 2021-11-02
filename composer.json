@@ -5,8 +5,7 @@
     "require": {
         "php": "^7.3|^8.0",
         "ext-curl": "*",
-        "ext-json": "*",
-        "laravel/framework": "^v8.69"
+        "ext-json": "*"
     },
     "license": "MIT",
     "autoload": {
