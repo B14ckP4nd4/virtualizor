@@ -24,50 +24,50 @@ class Virtualizor
     }
 
     // list of ip pools
-    public function ippools(int $page = 1, int $itemPerPage = 50, array $params = [])
+    public function IPPools(int $page = 1, int $itemPerPage = 50, array $params = [])
     {
-        return $this->getItems('ippool');
+        $list = $this->getItems('ippool');
+        return ($list && isset($list->ippools)) ? new Collection($list->ippools) : new Collection();
     }
 
     // list of IPs
     public function IPs(int $page = 1, int $itemPerPage = 50){
-        return $this->getItems('ips');
+        $list = $this->getItems('ips');
+        return ($list && isset($list->ips)) ? new Collection($list->ips) : new Collection();
     }
 
     // list of shortages
     public function Storages(int $page = 1, int $itemPerPage = 50 , array $params = []){
-        return $this->getItems('storage');
+        $list = $this->getItems('storage');
+        return ($list && isset($list->storage)) ? new Collection($list->storage) : new Collection();
     }
 
     // list of plans
     public function Plans(int $page = 1, int $itemPerPage = 50 , array $params = [])
     {
-        return $this->getItems('plans');
+        $list = $this->getItems('plans');
+        return ($list && isset($list->plans)) ? new Collection($list->plans) : new Collection();
     }
 
     // list of OsTemplates
     public function OSTemplates(int $page = 1, int $itemPerPage = 50 , array $params = [])
     {
-        return $this->getItems('ostemplates');
+        $list = $this->getItems('ostemplates');
+        return ($list && isset($list->ostemplates)) ? new Collection($list->ostemplates) : new Collection();
     }
 
     // list of OSes ( all OSes in Virtualizor )
-    public function virtualizorOSes(int $page = 1, int $itemPerPage = 50 , array $params = [])
+    public function VirtualizorOSes(int $page = 1, int $itemPerPage = 50 , array $params = [])
     {
-        if (empty($params)) {
-            $list = $this->sendRequest('ostemplates', ['page' => $page, 'reslen' => $itemPerPage]);
-
-        } else {
-            $list = $this->sendRequest('ostemplates', array_merge(['page' => $page, 'reslen' => $itemPerPage], $params));
-        }
-
+        $list = $this->getItems('ostemplates');
         return ($list && isset($list->oses)) ? new Collection($list->oses) : new Collection();
     }
 
     // list of virtual servers
-    public function listvps(array $search_params = [])
+    public function VPSes(array $search_params = [])
     {
-        return $this->getItems('vs');
+        $list = $this->getItems('vs');
+        return ($list && isset($list->vs)) ? new Collection($list->vs) : new Collection();
     }
 
     // get list of items from server like VPSs, Storages and etc.
@@ -79,7 +79,7 @@ class Virtualizor
             $list = $this->sendRequest($item, array_merge(['page' => $page, 'reslen' => $itemPerPage], $params));
         }
 
-        return ($list && isset($list->{$item})) ? new Collection($list->{$item}) : new Collection();
+        return $list;
     }
 
     // Generate and init a curl request to server
