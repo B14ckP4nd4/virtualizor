@@ -23,6 +23,9 @@ class Virtualizor
         $this->api_sec = $api_sec;
     }
 
+    /*
+     * Get the information methods from server
+     */
     // list of ip pools
     public function IPPools(int $page = 1, int $itemPerPage = 50, array $params = [])
     {
@@ -31,33 +34,35 @@ class Virtualizor
     }
 
     // list of IPs
-    public function IPs(int $page = 1, int $itemPerPage = 50){
+    public function IPs(int $page = 1, int $itemPerPage = 50)
+    {
         $list = $this->getItems('ips');
         return ($list && isset($list->ips)) ? new Collection($list->ips) : new Collection();
     }
 
     // list of shortages
-    public function Storages(int $page = 1, int $itemPerPage = 50 , array $params = []){
+    public function Storages(int $page = 1, int $itemPerPage = 50, array $params = [])
+    {
         $list = $this->getItems('storage');
         return ($list && isset($list->storage)) ? new Collection($list->storage) : new Collection();
     }
 
     // list of plans
-    public function Plans(int $page = 1, int $itemPerPage = 50 , array $params = [])
+    public function Plans(int $page = 1, int $itemPerPage = 50, array $params = [])
     {
         $list = $this->getItems('plans');
         return ($list && isset($list->plans)) ? new Collection($list->plans) : new Collection();
     }
 
     // list of OsTemplates
-    public function OSTemplates(int $page = 1, int $itemPerPage = 50 , array $params = [])
+    public function OSTemplates(int $page = 1, int $itemPerPage = 50, array $params = [])
     {
         $list = $this->getItems('ostemplates');
         return ($list && isset($list->ostemplates)) ? new Collection($list->ostemplates) : new Collection();
     }
 
     // list of OSes ( all OSes in Virtualizor )
-    public function VirtualizorOSes(int $page = 1, int $itemPerPage = 50 , array $params = [])
+    public function VirtualizorOSes(int $page = 1, int $itemPerPage = 50, array $params = [])
     {
         $list = $this->getItems('ostemplates');
         return ($list && isset($list->oses)) ? new Collection($list->oses) : new Collection();
@@ -71,7 +76,8 @@ class Virtualizor
     }
 
     // get list of items from server like VPSs, Storages and etc.
-    private function getItems(string $item , int $page = 1, int $itemPerPage = 50 , array $params = []){
+    private function getItems(string $item, int $page = 1, int $itemPerPage = 50, array $params = [])
+    {
         if (empty($params)) {
             $list = $this->sendRequest($item, ['page' => $page, 'reslen' => $itemPerPage]);
 
@@ -82,8 +88,151 @@ class Virtualizor
         return $list;
     }
 
+    /*
+     * Action methods for manage VPSes
+     */
+
+    // Start the VPS
+    public function Start(int $vpsid): bool
+    {
+        /*
+         * Try to send Start request
+         * as usual this action take time and curl will be killed and throw an Exception
+         */
+        try {
+            return $this->initServerActions([
+                    'action' => 'start',
+                    'vpsid' => $vpsid
+                ])->done ?? false;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    // Stop the VPS
+    public function Stop(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'action' => 'stop',
+                'vpsid' => $vpsid
+            ])->done ?? false;
+    }
+
+    // reStart the VPS
+    public function Restart(int $vpsid): bool
+    {
+        /*
+         * Try to send Restart request
+         * as usual this action take time and curl will be killed and throw an Exception
+         */
+        try {
+            return $this->initServerActions([
+                    'action' => 'restart',
+                    'vpsid' => $vpsid
+                ])->done ?? false;
+        } catch (\Exception $e) {
+            return true;
+        }
+    }
+
+    // PowerOff the VPS
+    public function PowerOff(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'action' => 'poweroff',
+                'vpsid' => $vpsid
+            ])->done ?? false;
+    }
+
+    // Suspend the VPS
+    public function Suspend(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'suspend' => $vpsid,
+            ])->done ?? false;
+    }
+
+    // UnSuspend the VPS
+    public function UnSuspend(int $vpsid): bool
+    {
+        /*
+         * Try to send UnSuspend request
+         * as usual this action take time and curl will be killed and throw an Exception
+         */
+        try {
+            return $this->initServerActions([
+                    'unsuspend' => $vpsid,
+                ])->done ?? false;
+        } catch (\Exception $e) {
+            return true;
+        }
+
+    }
+
+    // Suspend Network of the VPS
+    public function SuspendNetwork(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'suspend_net' => $vpsid,
+            ])->done ?? false;
+    }
+
+    // UnSuspend Network of the VPS
+    public function UnSuspendNetwork(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'unsuspend_net' => $vpsid,
+            ])->done ?? false;
+    }
+
+    // Reset Bandwidth Usage
+    public function ResetBandwidth(int $vpsid): bool
+    {
+        return $this->initServerActions([
+                'bwreset' => $vpsid,
+            ])->done ?? false;
+    }
+
+    // Reset Bandwidth Usage
+    public function getVPSesStatus(array $VPSesID)
+    {
+        return $this->initServerActions([
+            'vs_status' => $VPSesID,
+        ]);
+    }
+
+    // Lock the VPS
+    public function Lock(int $vpsid, string $reason = 'Locked by admin')
+    {
+        return $this->initServerActions([
+                'action' => 'lock',
+                'vpsid' => $vpsid,
+            ],
+                [
+                    'reason' => $reason
+                ])->vsop->id == $vpsid ?? false;
+    }
+
+    // UnLock the VPS
+    public function UnLock(int $vpsid)
+    {
+        return $this->initServerActions([
+                'action' => 'unlock',
+                'vpsid' => $vpsid,
+            ])->vsop->id == $vpsid ?? false;
+    }
+
+    // initialize Actions for VPSes like start , stop , restart and etc.
+    private function initServerActions(array $actions, array $post = [])
+    {
+        return $this->sendRequest('vs', $post, $actions, [], 3000);
+    }
+
+    /*
+     * Send Request and Get response methods
+     */
     // Generate and init a curl request to server
-    protected function sendRequest(string $action, array $params = [], array $GET = [], array $COOKIES = [])
+    protected function sendRequest(string $action, array $params = [], array $GET = [], array $COOKIES = [], int $timeout = 9000)
     {
 
         $ch = curl_init();
@@ -102,7 +251,7 @@ class Virtualizor
         // Turn off the server and peer verification (TrustManager Concept).
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
-        curl_setopt($ch, CURLOPT_TIMEOUT_MS, 9000);
+        curl_setopt($ch, CURLOPT_TIMEOUT_MS, $timeout);
         // UserAgent
         curl_setopt($ch, CURLOPT_USERAGENT, 'BlackPanda Virtualizor');
         // Cookies
