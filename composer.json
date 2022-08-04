@@ -1,9 +1,9 @@
 {
-    "name": "blackpanda/virtualizor",
+    "name": "b14ckp4nd4/virtualizor",
     "description": "Virtualizor API wrapper",
     "type": "library",
     "require": {
-        "php": "^7.3|^8.0",
+        "php": "^8.0.2",
         "ext-curl": "*",
         "ext-json": "*"
     },
@@ -29,5 +29,5 @@
             "email": "46260610+B14ckP4nd4@users.noreply.github.com"
         }
     ],
-    "minimum-stability": "dev"
+    "minimum-stability": "dev-dev"
 }
