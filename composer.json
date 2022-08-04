@@ -1,5 +1,5 @@
 {
-    "name": "blackpanda/virtualizor",
+    "name": "b14ckp4nd4/virtualizor",
     "description": "Virtualizor API wrapper",
     "type": "library",
     "require": {
