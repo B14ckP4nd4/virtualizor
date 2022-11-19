@@ -235,6 +235,18 @@ class Virtualizor
     }
 
     /**
+     * rebuild the vps
+     * @param array $params
+     * @return false|mixed
+     * @throws \Exception
+     */
+    public function rebuild(array $params)
+    {
+        $params['reos'] = 1;
+        return $this->sendRequest('rebuild', $params, [], [], 3000);
+    }
+
+    /**
      * Delete VPS by VPS vid
      * @param int $vid
      * @return false|mixed
