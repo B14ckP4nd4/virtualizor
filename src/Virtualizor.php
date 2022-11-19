@@ -222,6 +222,32 @@ class Virtualizor
             ])->vsop->id == $vpsid ?? false;
     }
 
+    /**
+     * create new vps on dedicated server
+     * @param array $params
+     * @return false|mixed
+     * @throws \Exception
+     */
+    public function create_vps(array $params)
+    {
+        $params['addvps'] = 1;
+        return $this->sendRequest('addvs', $params, [], [], 3000);
+    }
+
+    /**
+     * Delete VPS by VPS vid
+     * @param int $vid
+     * @return false|mixed
+     * @throws \Exception
+     */
+    public function delete_vps(int $vid)
+    {
+        $params = [
+            'delete' => $vid,
+        ];
+        return $this->sendRequest('vs', $params, [], [], 3000);
+    }
+
     // initialize Actions for VPSes like start , stop , restart and etc.
     private function initServerActions(array $actions, array $post = [])
     {
