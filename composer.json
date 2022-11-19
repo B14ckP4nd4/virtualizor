@@ -3,7 +3,7 @@
     "description": "Virtualizor API wrapper",
     "type": "library",
     "require": {
-        "php": "^8.0.2",
+        "php": "^7.3|^8.0",
         "ext-curl": "*",
         "ext-json": "*"
     },
@@ -28,10 +28,6 @@
             "name": "BlackPanda",
             "email": "46260610+B14ckP4nd4@users.noreply.github.com"
         }
-<<<<<<< HEAD
-    ]
-=======
     ],
     "minimum-stability": "beta"
->>>>>>> master
 }
